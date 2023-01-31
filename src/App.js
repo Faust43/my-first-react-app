@@ -9,6 +9,7 @@ import MyInput from './components/UI/input/MyInput'
 import PostForm from './components/PostForm'
 import MySelect from './components/UI/select/MySelect'
 import PostFilter from './components/PostFilter'
+import MyModal from './components/UI/modal/MyModal'
 
 function App() {
 	const [posts, setPosts] = useState([
@@ -31,6 +32,8 @@ function App() {
 
 	const [filter, setFilter] = useState({ sort: '', query: '' })
 
+	const [modal, setModal] = useState(false)
+
 	const sortedPosts = useMemo(() => {
 		if (filter.sort) {
 			return [...posts].sort((a, b) =>
@@ -48,6 +51,7 @@ function App() {
 
 	const createPost = newPost => {
 		setPosts([...posts, newPost])
+		setModal(false)
 	}
 
 	const removePost = post => {
@@ -56,15 +60,19 @@ function App() {
 
 	return (
 		<div className='App'>
-			<PostForm create={createPost} />
+			<MyButton style={{ marginTop: 15 }} onClick={() => setModal(true)}>
+				Создать пост
+			</MyButton>
 			<hr style={{ margin: '15px 0' }} />
+			<MyModal visible={modal} setVisible={setModal}>
+				<PostForm create={createPost} />
+			</MyModal>
 			<PostFilter filter={filter} setFilter={setFilter} />
-				<PostList
-					remove={removePost}
-					posts={sortedAndSerchedPosts}
-					title='Java script'
-				/>
-
+			<PostList
+				remove={removePost}
+				posts={sortedAndSerchedPosts}
+				title='Java script'
+			/>
 		</div>
 	)
 }
