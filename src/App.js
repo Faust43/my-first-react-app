@@ -10,6 +10,7 @@ import PostForm from './components/PostForm'
 import MySelect from './components/UI/select/MySelect'
 import PostFilter from './components/PostFilter'
 import MyModal from './components/UI/modal/MyModal'
+import { usePosts } from './hooks/usePost'
 
 function App() {
 	const [posts, setPosts] = useState([
@@ -29,25 +30,9 @@ function App() {
 			body: 'Description1',
 		},
 	])
-
 	const [filter, setFilter] = useState({ sort: '', query: '' })
-
 	const [modal, setModal] = useState(false)
-
-	const sortedPosts = useMemo(() => {
-		if (filter.sort) {
-			return [...posts].sort((a, b) =>
-				a[filter.sort].localeCompare(b[filter.sort])
-			)
-		}
-		return posts
-	}, [filter.sort, posts])
-
-	const sortedAndSerchedPosts = useMemo(() => {
-		return sortedPosts.filter(post =>
-			post.title.toLowerCase().includes(filter.query)
-		)
-	}, [filter.query, sortedPosts])
+	const sortedAndSerchedPosts = usePosts(posts, filter.sort, filter.query)
 
 	const createPost = newPost => {
 		setPosts([...posts, newPost])
